@@ -1,5 +1,5 @@
 import { getSheetFile } from "../test";
-import { checkReconAbility } from "./recon";
+import { checkReconAbility, reconReport } from "./recon";
 import { excelFileToArrayBuffer, workBookToJson } from "./sheet";
 
 describe("ReconService", function () {
@@ -99,6 +99,45 @@ describe("ReconService", function () {
       const data2 = json2[Object.keys(json2)[0]];
       const is = await checkReconAbility(data1, data2);
       expect(is).toEqual(false);
+    });
+  });
+  describe("reconReport", function () {
+    it("should produce recon report", async () => {
+      const file = await getSheetFile("test1.xlsx");
+      const file2 = await getSheetFile("test1.xlsx");
+      const ab = await excelFileToArrayBuffer(file);
+      const ab2 = await excelFileToArrayBuffer(file2);
+      const json1 = await workBookToJson(ab);
+      const json2 = await workBookToJson(ab2);
+      const data1 = json1[Object.keys(json1)[0]];
+      const data2 = json2[Object.keys(json2)[0]];
+      const reconResult = await reconReport(
+        data1,
+        data2,
+        "reference",
+        "credit"
+      );
+      expect(reconResult).toEqual({
+        unknow: [],
+        fail: [],
+        pass: [
+          {
+            ref: 1797289,
+            expect: 0,
+            actual: 0
+          },
+          {
+            ref: "G742129",
+            expect: 2000000,
+            actual: 2000000
+          },
+          {
+            ref: 1799762,
+            expect: 0,
+            actual: 0
+          }
+        ]
+      });
     });
   });
 });
