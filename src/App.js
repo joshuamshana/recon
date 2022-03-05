@@ -1,9 +1,10 @@
-import "./styles.css";
+import ReconForm from "./components/Reconform";
+import { appContainer } from "./styles";
 
 export default function App() {
   return (
-    <div className="App">
-      <h1>Recon</h1>
+    <div style={appContainer()}>
+      <ReconForm />
     </div>
   );
 }
