@@ -1,6 +1,5 @@
 export function appContainer() {
   return {
-    marginTop: "20px",
     justifyContent: "center",
     alignItems: "center",
     alignContents: "center",

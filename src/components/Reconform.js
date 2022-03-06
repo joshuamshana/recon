@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { columnOptions, validate4Recon } from "../services/reconform";
+import {
+  columnOptions,
+  generateReport,
+  validate4Recon
+} from "../services/reconform";
 import { selectContainer } from "../styles";
 import { reconFormContainer } from "../styles/reconform";
-import FileInput from "./fileinput";
-import Label from "./label";
+import FileInput from "./Fileinput";
+import Label from "./Label";
 
 function ValidateButton({ validateP, onClick }) {
   return (
@@ -34,7 +38,7 @@ function ValidateButton({ validateP, onClick }) {
   );
 }
 
-function ReportButton({ mH, rH, onClick }) {
+function ReportButton({ mH, rH, file1, file2, setReport }) {
   const [progress, setProgress] = useState(false);
   return (
     <button
@@ -49,6 +53,14 @@ function ReportButton({ mH, rH, onClick }) {
           return;
         }
         setProgress(true);
+        generateReport(mH, rH, file1, file2)
+          .then(setReport)
+          .catch((reason) => {
+            alert(reason.message);
+          })
+          .finally(() => {
+            setProgress(false);
+          });
       }}
       style={{
         background: "#00F0FF",
@@ -80,7 +92,8 @@ function FinalizeForm({
   matchHeader,
   reconHeader,
   setMatchHeader,
-  setReconHeader
+  setReconHeader,
+  setReport
 }) {
   const [mH, setMh] = useState([]);
   const [rH, setRh] = useState([]);
@@ -132,12 +145,18 @@ function FinalizeForm({
           );
         })}
       </select>
-      <ReportButton mH={matchHeader} rH={reconHeader} />
+      <ReportButton
+        file1={file1}
+        file2={file2}
+        mH={matchHeader}
+        rH={reconHeader}
+        setReport={setReport}
+      />
     </div>
   );
 }
 
-function ReconForm() {
+function ReconForm({ setReport }) {
   const [file1, setFile1] = useState();
   const [file2, setFile2] = useState();
   const [validateP, setValidateP] = useState(false);
@@ -175,6 +194,7 @@ function ReconForm() {
           reconHeader={rH}
           file1={file1}
           file2={file2}
+          setReport={setReport}
         />
       ) : (
         <ValidateButton
