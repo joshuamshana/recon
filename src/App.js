@@ -1,9 +1,18 @@
-import "./styles.css";
+import React, { useState } from "react";
+import ReconForm from "./components/Reconform";
+import Report from "./components/Report";
+import { appContainer } from "./styles";
 
 export default function App() {
+  const [report, setReport] = useState();
+
   return (
-    <div className="App">
-      <h1>Recon</h1>
+    <div style={appContainer()}>
+      {report ? (
+        <Report report={report} setReport={setReport} />
+      ) : (
+        <ReconForm setReport={setReport} />
+      )}
     </div>
   );
 }

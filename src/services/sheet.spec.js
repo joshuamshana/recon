@@ -1,3 +1,4 @@
+import { getSheetFile } from "../test";
 import { excelFileToArrayBuffer, workBookToJson } from "./sheet";
 
 describe("SheetService", function () {
@@ -21,10 +22,7 @@ describe("SheetService", function () {
       });
     });
     it("should return json if workdata is valid", async () => {
-      const fileUrl = "https://cvhp3t.csb.app/test1.xlsx";
-      const r = await fetch(fileUrl);
-      const blob = await r.blob();
-      const file = new File([blob], "test1.xlsx");
+      const file = await getSheetFile("test1.xlsx");
       const ab = await excelFileToArrayBuffer(file);
       const json = await workBookToJson(ab);
       expect(json).toBeInstanceOf(Object);
